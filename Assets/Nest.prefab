@@ -98,7 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ant_prefab: {fileID: 7640256693761098458, guid: cc0d8b0bed22c014180e5663591e9325, type: 3}
   count: 50
-  birth_cost: 0
+  birth_cost: 10
   current_food: 0
   total_food: 0
 --- !u!58 &-7032068569877152084

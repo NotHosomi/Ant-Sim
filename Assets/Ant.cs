@@ -23,6 +23,7 @@ public class Ant : MonoBehaviour
     float PH_coeff = 1f;
 
     public bool carrying = false;
+    bool followingTrail = false;
 
     private void Start()
     {
@@ -102,7 +103,8 @@ public class Ant : MonoBehaviour
             Color c = p.GetComponent<SpriteRenderer>().color;
             c.a *= PH_coeff;
             p.GetComponent<SpriteRenderer>().color = c;
-            PH_coeff -= genes.PH_weakness_rate;
+            if(!followingTrail)
+                PH_coeff -= genes.PH_weakness_rate;
         }    
 
         Vector2 dist = transform.position - nest.position;
@@ -133,6 +135,14 @@ public class Ant : MonoBehaviour
             wish_dir = -transform.right;
         if (sensors[2] > Mathf.Max(sensors[1], sensors[0]))
             wish_dir = transform.right;
+
+        followingTrail = false;
+        for (int i = 0; i < 3; ++i)
+            if (sensors[i] > 0)
+            {
+                followingTrail = true;
+                break;
+            }
     }
 
     void onTouchNest()
