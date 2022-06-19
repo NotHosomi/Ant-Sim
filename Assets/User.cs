@@ -13,20 +13,23 @@ public class User : MonoBehaviour
     void Update()
     {
         Camera.main.orthographicSize -= Input.mouseScrollDelta.y * zoomSpeed;
+        if (Input.GetKeyDown(KeyCode.Minus))
+            Camera.main.orthographicSize += 5;
+        if (Input.GetKeyDown(KeyCode.Equals))
+            Camera.main.orthographicSize -= 5;
 
-
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(1))
         {
             Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             pos.z = 0;
             Instantiate(food_prefab, pos, Quaternion.identity);
         }
 
-        if (Input.GetMouseButtonDown(2))
+        if (Input.GetMouseButtonDown(2) || Input.GetMouseButtonDown(0))
         {
             prev_pos = Input.mousePosition;
         }
-        if (Input.GetMouseButton(2))
+        if (Input.GetMouseButton(2) || Input.GetMouseButton(0))
         {
             Vector2 pos = (Vector2)Input.mousePosition - prev_pos;
             Camera.main.transform.position -= (Vector3)(pos) * 0.002f * Camera.main.orthographicSize;
@@ -41,5 +44,7 @@ public class User : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P))
             Time.timeScale = 1;
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Application.Quit();
     }
 }
