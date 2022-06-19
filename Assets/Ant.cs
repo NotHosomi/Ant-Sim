@@ -20,6 +20,7 @@ public class Ant : MonoBehaviour
     Vector2 pos;
     Vector2 vel;
     Vector2 wish_dir;
+    float PH_coeff = 1f;
 
     public bool carrying = false;
 
@@ -46,12 +47,8 @@ public class Ant : MonoBehaviour
 
         float rot = Mathf.Atan2(vel.y, vel.x) * Mathf.Rad2Deg - 90;
         transform.SetPositionAndRotation(pos, Quaternion.Euler(0, 0, rot));
-        if ((transform.position - nest.position).sqrMagnitude < 16 && carrying)
-        {
-            carrying = false;
-            nest.GetComponent<Nest>().deposit();
-            ++score;
-        }
+        if ((transform.position - nest.position).sqrMagnitude < 16)
+            onTouchNest();
     }
 
 
@@ -100,6 +97,13 @@ public class Ant : MonoBehaviour
     {
         Pheromone p = Instantiate(pheromone_prefabs[(carrying) ? 1 : 0], transform.position, Quaternion.identity).GetComponent<Pheromone>();
         p.init(carrying ? genes.PF_duration : genes.PH_duration);
+        if(!carrying)
+        {
+            Color c = p.GetComponent<SpriteRenderer>().color;
+            c.a *= PH_coeff;
+            p.GetComponent<SpriteRenderer>().color = c;
+            PH_coeff -= genes.PH_weakness_rate;
+        }    
 
         Vector2 dist = transform.position - nest.position;
         if (Mathf.Abs(dist.x) > 200 || Mathf.Abs(dist.y) > 200)
@@ -129,6 +133,17 @@ public class Ant : MonoBehaviour
             wish_dir = -transform.right;
         if (sensors[2] > Mathf.Max(sensors[1], sensors[0]))
             wish_dir = transform.right;
+    }
+
+    void onTouchNest()
+    {
+        PH_coeff = 1;
+        if(carrying)
+        {
+            carrying = false;
+            nest.GetComponent<Nest>().deposit();
+            ++score;
+        }
     }
 
     private void OnDrawGizmos()

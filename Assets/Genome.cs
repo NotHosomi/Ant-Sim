@@ -10,4 +10,5 @@ public class Genome
     public float wander_strength = 0.1f;
     public float PH_duration = 100;
     public float PF_duration = 100;
+    public float PH_weakness_rate = 0.01f;
 }
